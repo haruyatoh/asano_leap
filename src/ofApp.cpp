@@ -1,6 +1,10 @@
 #include "ofApp.h"
 
+float circle_centerX;
+float circle_centerY;
 float circle_centerZ;
+float formerX;
+float formerY;
 float formerZ;
 
 bool ball_thrown;
@@ -56,29 +60,32 @@ void ofApp::update(){
         
         
         
-        if(simpleHands.size() >= 1 && ball_thrown == false){
+        if(ball_thrown == false){
             if(ofDist(fingerPos.at(3).x,fingerPos.at(3).y,fingerPos.at(7).x,fingerPos.at(7).y)>150){
                     circle_centerZ = -3000;
                     ball_thrown = true;
             }else{
-            
+                circle_centerX = (fingerPos.at(3).x+fingerPos.at(7).x)/2;
+                circle_centerY = (fingerPos.at(3).y+fingerPos.at(7).y)/2;
                 circle_centerZ = (fingerPos.at(3).z+fingerPos.at(7).z)/2;
-                cam.setOrientation(ofPoint(0,0,0));
             }
+            formerX = (fingerPos.at(3).x+fingerPos.at(7).x)/2;
+            formerY = (fingerPos.at(3).y+fingerPos.at(7).y)/2;
             formerZ = (fingerPos.at(3).z+fingerPos.at(7).z)/2;
         }
         
-        if(simpleHands.size() >= 1 && ball_thrown == true){
+        if(ball_thrown == true){
+            circle_centerX  = formerX;
+            circle_centerY =  formerY;
             time++;
-            circle_centerZ =  - time*50;
+            circle_centerZ =  - time*30;
+            
 //            cam.setPosition((handPos.at(0).x+handPos.at(1).x)/2, (handPos.at(0).y+handPos.at(1).y)/2, circle_centerZ+200);
             
             if(circle_centerZ < -3000){
                 time =0;
                 ball_thrown = false;
                 circle_centerZ = 0;
-                cam.setOrientation(ofPoint(0,0,0));
-                cam.setPosition(0, 0, 500);
             }
 
         }
@@ -118,14 +125,16 @@ void ofApp::draw(){
             
         }
     }
-        if(fingerPos.size()==40){
+    
+        if(fingerPos.size() == 20){
         float distance = sqrt(pow(fingerPos.at(3).x-fingerPos.at(7).x,2)
                               +pow(fingerPos.at(3).y-fingerPos.at(7).y,2)
                               +pow(fingerPos.at(3).z-fingerPos.at(7).z,2));
-        ofSetColor(249,31,99,150);
+            ofSetColor(ofColor::fromHsb(ofGetFrameNum()/10%255, 255, 255));
             ofFill();
         
         
+            
         if(ball_thrown == false){
         ofDrawSphere((fingerPos.at(3).x+fingerPos.at(7).x)/2,
                      (fingerPos.at(3).y+fingerPos.at(7).y)/2,
@@ -134,8 +143,7 @@ void ofApp::draw(){
                      
             
         }else{
-            ofDrawSphere((fingerPos.at(3).x+fingerPos.at(7).x)/2, (fingerPos.at(3).y+fingerPos.at(7).y)/2, circle_centerZ,30);
-
+            ofDrawSphere(circle_centerX,circle_centerY, circle_centerZ,30);
         }
     }
     
@@ -143,6 +151,8 @@ void ofApp::draw(){
     
     cam.end();
     ofDrawBitmapStringHighlight(ofToString(ball_thrown), 10,10);
+    
+    
     
 
 }

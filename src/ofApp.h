@@ -1,9 +1,6 @@
 #pragma once
 
-#define NUM 5000
-
 #include "ofMain.h"
-
 #include "ofxLeapMotion2.h"
 
 class ofApp : public ofBaseApp{
@@ -27,10 +24,6 @@ private:
 		void gotMessage(ofMessage msg);
     
     void exit();
-    
-    ofBoxPrimitive box, mBox[NUM];
-    
-    int boxSize;
 
     
     ofxLeapMotion leap;
@@ -45,6 +38,8 @@ private:
     int time;
     
     ofImage BackgroundImage;
+    
+    vector<ofSpherePrimitive> sphere;
 
 		
 };
